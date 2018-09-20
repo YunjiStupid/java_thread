@@ -29,6 +29,7 @@ class Consumer{
             }else{
                 this.msg.setTitle("张磊");
                 this.msg.setContent("还需努力");
+
             }
         }
     }
