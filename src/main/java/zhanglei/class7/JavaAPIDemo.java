@@ -24,15 +24,38 @@ package zhanglei.class7;
  *    CharSequence是一个描述字符串结构的接口，在这个接口里一般发现有三个常用子类
  *    只要字符串就可以为CharSequence接口实例化
  *
+ *
  * 课时28  AutoCloseable 接口
  *    AutoCloseable主要是用于日后资源开发的处理上，以实现资源的自动关闭(释放)
  *      ·关闭方法：public void close() throws Exception
  *    要想实现自动关闭，除了要使用AutoCloseable之外，还需要结合异常处理
  *
  *
+ * 课时29  Runtime类
+ *    描述的是运行时的状态，在整个JVM之中，Runtime类是唯一一个与JVM运行状态有关的类
+ *    并且提供有一个该类的实例化对象
+ *    由于在每一个JVM进程里只允许提供有一个Runtime类的对象，所以这个类的构造方法默认私有化了
+ *    本类使用的是单例设计模式，并且单例设计模式一定会提供有一个static方法获取本类实例化对象
+ *    由于本类属于单例设计模式，若想取得实例化对象，name可以依靠getRuntime()方法完成
+ *      ·获取实例化对象：public static Runtime getRuntime();
+ *      ·获取本机CPU的内核数： public int availableProcessors()
+ *    除了以上的方法之外，在Runtime类里面还提供有以下四个重要操作
+ *      ·获取最大可用内存空间：public long maxMemory()  默认配置为本机系统内存的四分之一
+ *      ·获取可用内存空间：public long totalMemory()  默认配置为本机系统内存的64分之1
+ *      ·获取空闲内存空间：public long freeMemory()
+ *      ·手工进行GC处理：public coid gc()
  *
  *
+ * 课时30  System类
+ *      ·数组拷贝： public static void arraycopy(Object src,int srcPos,Object dest,int destPos,int length)
+ *      ·获取当前的日期时间数值：public static long currentTimeMillis()
+ *      ·进行垃圾回收：public static void gc()
  *
+ *
+ * 课时31  Cleaner类
+ *    Cleaner类是jdk1.9之后提供的一个对象清理操作，其主要功能是进行finializable()方法的替代
+ *    Java本身依然提供了给用户收尾的操作，每一个实例化对象，在回收之前至少给一个喘息的机会，最初实现对象收尾的
+ *的是Object类中提供的finializable()
  *
  *
  * @author zl
@@ -72,7 +95,7 @@ public class JavaAPIDemo {
     /**
      * 课时28*********************************************************
      */
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         try(Message msg = new Message("zhaglei")){
 
             if(msg.open()){
@@ -82,7 +105,44 @@ public class JavaAPIDemo {
             e.printStackTrace();
         }
 
-    }
+    }*/
+
+/**
+ * 课时29*********************************************************
+ */
+    /*public static void main(String[] args) {
+        Runtime run = Runtime.getRuntime();
+        System.out.println(run.availableProcessors());
+        System.out.println("【1】最大可用内存" + run.maxMemory());
+        System.out.println("【1】最大可使用内存" + run.totalMemory());
+        System.out.println("【1】最大空闲内存" + run.freeMemory());
+        String str = "";
+        for(int x = 0; x < 90000; x ++){
+            str +="hello";
+        }
+        System.out.println("【2】最大可用内存" + run.maxMemory());
+        System.out.println("【2】最大可使用内存" + run.totalMemory());
+        System.out.println("【2】最大空闲内存" + run.freeMemory());
+        run.gc();
+        System.out.println("【3】最大可用内存" + run.maxMemory());
+        System.out.println("【3】最大可使用内存" + run.totalMemory());
+        System.out.println("【3】最大空闲内存" + run.freeMemory());
+
+    }*/
+
+/**
+ * 课时30*********************************************************
+ */
+    /*public static void main(String[] args) {
+        long start = System.currentTimeMillis();
+        String str = "";
+        for(int x = 0; x < 90000; x ++){
+            str +="hello";
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("操作耗时：" + (end - start));
+
+    }*/
 
 }
 interface IMessage extends AutoCloseable{
