@@ -34,10 +34,10 @@ public class JavaAPIDemo {
     }*/
 
     /**
-     * 课时44*******************************
+     * 课时44******************************* 此代码有问题
      */
     public static void main(String[] args)throws Exception {
-        ResourceBundle resource = ResourceBundle.getBundle("zhanglei.message");
+        ResourceBundle resource = ResourceBundle.getBundle("config");
         String val = resource.getString("info");
         System.out.println(val);
     }
