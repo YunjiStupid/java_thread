@@ -37,7 +37,7 @@ import java.util.TimerTask;
  *          ·java.util.TimeTask类：实现定时任务处理
  *          ·java.util.Timer类：进行任务的启动
  *              |-任务启动：public void schedule(TimeTask task,long delay),延迟单位为毫秒
- *              |-间隔触发：public void schedule(TimeTask task,long delay),延迟单位为毫秒
+ *              |-间隔触发：timer.scheduleAtFixedRate(new MyTask(),500,1000),延迟500毫秒开始。间隔1000毫秒触发一次
  *
  * 课时51 Base64加密与解密
  *      新的加密处理操作类，Base64，在这个类里面有两个内部类
