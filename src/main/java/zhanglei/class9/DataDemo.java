@@ -39,13 +39,18 @@ public class DataDemo {
      */
     public static void main(String[] args) throws ParseException {
         Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-HH-dd HH:mm:ss:SSS");
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS");
         String str = sdf.format(date);
         System.out.println(str);
 
-        String birthday = "1996-07-31 11:11:11:111";
-        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-HH-dd HH:mm:ss:SSS");
+        String birthday = "08:30:00.0000";
+        SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm:ss.SSSS");
         Date date1 = sdf2.parse(birthday);
-        System.out.println(date1);
+        System.out.println(date1.getTime());
+
+        String birthday2 = "23:00:00.0000";
+        SimpleDateFormat sdf3 = new SimpleDateFormat("HH:mm:ss.SSSS");
+       Date date2 = sdf3.parse(birthday2);
+        System.out.println(date2.getTime());
     }
 }
