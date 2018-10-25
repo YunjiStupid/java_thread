@@ -31,7 +31,7 @@ import java.io.*;
  *      InputStream类主要实现的是字节输入读取，在InputSream类中定义有如下的方法
  *          ·读取单个字节数据：public abstract int read() throws IOException 如果现在已经读取到底了，返回-1,如果
  *          ·读取一组字节数据：public int read(byte [] b) throws IOException 读取一组字节数据，返回的是读取的个数，如果没有数据已经读取到底，返回-1
- *          ·读取一组字节数据的部分内容：public int read(byte [] b,int off,intlen) throws IOException
+ *          ·读取一组字节数据的部分内容：public int read(byte [] b,int off,int len) throws IOException
  *          ·JDK1.9开始在InputStream类中新增了一个新的方法public byte[] readAllBytes() throws IOException（数据量太大时，不能使用）
  *
  * 课时75 Writer字符输出流
@@ -64,12 +64,29 @@ import java.io.*;
  *      ·定义：public class OutputStreamWriter extends Writer
  *      ·构造方法：public OutputStreamWriter(OutputStream out)
  *
- *
  *      所谓的转换处理就是将收到的字节流数据对象通过向上转型变为字符流对象
  * 讲解转换流主要目的不是为了让开发者记住它，而是知道有这样一种功能，更多的是需要进行分析处理，
  * 通过之前的字节流与字符流的一系列的分析之后，会发现OutputStream类有FileOutputStream直接
  * 子类，InputStream类有FileInputStream直接子类，但是来观察一下FileWriter、FileReader的继承关系
  * 二者均是继承自转换流
+ *
+ *
+ * 课时79 综合实战：文件拷贝
+ *      在操作系统里面有一个copy命令，这个命令的主要功能是可以实现文件的拷贝处理，现在要求模拟这个命令，通过初始化参数
+ * 输入拷贝的源文件路径与拷贝的目标路径实现文件的拷贝处理。
+ *      需求分析：
+ *          ·需要实现文件的拷贝操作：那么这种拷贝就有可能拷贝各种类型的文件，所以肯定使用字节流
+ *          ·在进行拷贝的时候可能需要考虑到大文件的拷贝问题
+ *      实现方案：
+ *          ·方案一：使用InputStream将全部要拷贝的内容直接读取到程序里面，而后一次性的输出到目标文件；
+ *              -|如果现在拷贝的文件很大，程序会崩溃
+ *          ·方案二：采用部分拷贝，读取一部分，输出一部分。若要采用方案二，核心的操作方法：
+ *              -|InputStream public int read(byte [] b) throws IOException
+ *              -|OutputStream public void write(byte [] b,int off,int len) throws IOException
+ *
+ *
+ *
+ *
  *
  * @author zl
  * @date 2018/10/12
@@ -149,7 +166,7 @@ public class IODemo {
     /**
      * 课时78***************************************
      */
-    public static void main(String[] args) throws Exception {
+    /*public static void main(String[] args) throws Exception {
         //1.指定要操作的文件的路径
         File file = new File("d:" + "zz" + File.separator +"dwdw.txt");
         if(!file.getParentFile().exists()){
@@ -162,6 +179,83 @@ public class IODemo {
         writer.write("威锋网给我WWEFGYJ");
         writer.close();
         outputStream.close();
+    }*/
+
+    public static void main(String[] args) throws Exception {
+        if (args.length != 2) {
+            System.out.println("命令执行错误");
+            System.exit(1);
+        }
+        long start = System.currentTimeMillis();
+        FileUtil fu = new FileUtil(args[0],args[1]);
+        System.out.println(fu.copy() ? "文件拷贝成功" : "文件拷贝失败");
+        long end = System.currentTimeMillis();
+        System.out.println("拷贝完成时间：" + (end - start));
     }
 
+}
+
+/**
+ * 定义一个文件操作的工具类
+ */
+class FileUtil{
+    private File srcFile;
+    private File desFile;
+
+    public FileUtil(String src,String des){
+        this(new File(src),new File(des));
+    }
+
+    public FileUtil(File srcFile,File desFile){
+        this.srcFile = srcFile;
+        this.desFile = desFile;
+    }
+
+    /**
+     * 文件的copy
+     * @author zl
+     * @date 2018/10/23
+     * @param
+     * @return boolean
+     */
+    public boolean copy() throws IOException{
+        if(!this.srcFile.exists()){
+            System.out.println("源文件不存在");
+            return false;
+        }
+        //判断是否有目录
+        if(!this.desFile.getParentFile().exists()){
+            //创建父目录
+            this.desFile.getParentFile().mkdirs();
+        }
+        //开辟一个拷贝的缓冲区
+        byte data [] = new byte[1024];
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+
+        try{
+
+            inputStream = new FileInputStream(this.srcFile);
+            outputStream = new FileOutputStream(this.desFile);
+            int len = 0;
+            //读取数据到数组之中，随后返回读的个数
+            //判断个数是否-1，如果不是则进行写入
+            //开始拷贝
+            while(inputStream.read(data) != -1){
+                outputStream.write(data,0,len);
+            }
+
+        return true;
+        }catch (IOException e){
+            throw e;
+        }finally {
+            if(inputStream != null){
+                inputStream.close();
+            }
+            if(outputStream != null){
+                outputStream.close();
+            }
+
+        }
+    }
 }
